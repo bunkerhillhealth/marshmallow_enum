@@ -31,13 +31,13 @@ class TestEnumFieldByName(object):
         self.field = EnumField(EnumTester)
 
     def test_serialize_enum(self):
-        assert self.field._serialize(EnumTester.one, None, object()) == 'one'
+        assert self.field._serialize(EnumTester.one, None, object()) == 1
 
     def test_serialize_none(self):
         assert self.field._serialize(None, None, object()) is None
 
     def test_deserialize_enum(self):
-        assert self.field._deserialize('one', None, {}) == EnumTester.one
+        assert self.field._deserialize(1, None, {}) == EnumTester.one
 
     def test_deserialize_none(self):
         assert self.field._deserialize(None, None, {}) is None
@@ -78,7 +78,7 @@ class TestEnumFieldAsSchemaMember(object):
     def test_enum_field_load(self):
         serializer = self.EnumSchema()
 
-        data = serializer.load({'enum': 'one'})
+        data = serializer.load({'enum': 1})
         if MARSHMALLOW_VERSION_MAJOR < 3:
             data = data.data
 
@@ -91,7 +91,7 @@ class TestEnumFieldAsSchemaMember(object):
         if MARSHMALLOW_VERSION_MAJOR < 3:
             data = data.data
 
-        assert data['enum'] == 'one'
+        assert data['enum'] == 1
 
 
 class TestEnumByValueAsSchemaMember(object):
@@ -127,7 +127,7 @@ class TestEnumFieldInListField(object):
     def test_enum_list_load(self):
         serializer = self.ListEnumSchema()
 
-        data = serializer.load({'enum': ['one', 'two']})
+        data = serializer.load({'enum': [1, 2]})
         if MARSHMALLOW_VERSION_MAJOR < 3:
             data = data.data
 
@@ -140,7 +140,7 @@ class TestEnumFieldInListField(object):
         if MARSHMALLOW_VERSION_MAJOR < 3:
             data = data.data
 
-        assert data['enum'] == ['one', 'two']
+        assert data['enum'] == [1, 2]
 
 
 class TestEnumFieldByValueInListField(object):
@@ -250,8 +250,8 @@ class TestLoadDumpConfigBehavior(object):
 
     def test_load_and_dump_by_default_to_by_value(self):
         f = EnumField(EnumTester)
-        assert f.load_by == EnumField.NAME
-        assert f.dump_by == EnumField.NAME
+        assert f.load_by == EnumField.VALUE
+        assert f.dump_by == EnumField.VALUE
 
     def test_load_by_raises_if_not_proper_value(self):
         with pytest.raises(ValueError) as excinfo:
